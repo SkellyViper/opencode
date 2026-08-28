@@ -1,0 +1,7 @@
+{
+  "name": "OpenCode",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "features": {
+    "ghcr.io/devcontainer-community/devcontainer-features/bun.sh:1": {}
+  }
+}
