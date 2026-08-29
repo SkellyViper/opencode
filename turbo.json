@@ -42,6 +42,14 @@
     "@opencode-ai/session-ui#test": {
       "dependsOn": ["^build"],
       "outputs": []
+    },
+    // web's only test is a pure-function unit test (i18n/locales) with no
+    // dependency on any built package, so it skips the "^build" the entries
+    // above need — adding opencode#build (a multi-target binary build) to the
+    // unit job just to run it would defeat the "keep CI fast" goal.
+    "@opencode-ai/web#test": {
+      "dependsOn": [],
+      "outputs": []
     }
   }
 }
