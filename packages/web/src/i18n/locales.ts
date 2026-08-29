@@ -94,24 +94,33 @@ export function exactLocale(input: string) {
 
   return null
 }
+function matchChineseLocale(value: string): Locale | null {
+  if (!value.startsWith("zh")) return null
 
+  const traditionalMarkers = ["hant", "-tw", "-hk", "-mo"]
+  const isTraditional = traditionalMarkers.some((marker) => value.includes(marker))
+
+  return isTraditional ? "zh-tw" : "zh-cn"
+}
+
+function matchLocaleAlias(value: string): Locale | null {
+  if (!(value in localeAlias)) return null
+
+  return localeAlias[value as keyof typeof localeAlias]
+}
+
+function matchLocalePrefix(value: string): Locale | null {
+  if (value.startsWith("pt")) return "pt-br"
+
+  if (value.startsWith("no") || value.startsWith("nb") || value.startsWith("nn")) {
+    return "nb"
+  }
+
+  return starts.find((item) => value.startsWith(item[0]))?.[1] ?? null
+}
 export function matchLocale(input: string) {
   const value = parse(input)
   if (!value) return null
 
-  if (value.startsWith("zh")) {
-    if (value.includes("hant") || value.includes("-tw") || value.includes("-hk") || value.includes("-mo")) {
-      return "zh-tw"
-    }
-    return "zh-cn"
-  }
-
-  if (value in localeAlias) {
-    return localeAlias[value as keyof typeof localeAlias]
-  }
-
-  if (value.startsWith("pt")) return "pt-br"
-  if (value.startsWith("no") || value.startsWith("nb") || value.startsWith("nn")) return "nb"
-
-  return starts.find((item) => value.startsWith(item[0]))?.[1] ?? null
+  return matchChineseLocale(value) ?? matchLocaleAlias(value) ?? matchLocalePrefix(value)
 }
